@@ -1,0 +1,5 @@
+Đồ thị được tạo ra bởi câu lệnh sau:
+  graph = ox.graph_from_place('Hoan Kiem District, Hanoi, Vietnam', network_type='drive')
+Đồ thị này lưu trữ thông tin về các tuyến đường. Các node là các điểm và các cạnh giữa 2 node là đường đi giữa 2 điểm đó.
+Dữ liệu trong node:
+Dữ liệu trong edge:
