@@ -1,5 +1,19 @@
 Đồ thị được tạo ra bởi câu lệnh sau:
   graph = ox.graph_from_place('Hoan Kiem District, Hanoi, Vietnam', network_type='drive')
 Đồ thị này lưu trữ thông tin về các tuyến đường. Các node là các điểm và các cạnh giữa 2 node là đường đi giữa 2 điểm đó.
-Dữ liệu trong node:
-Dữ liệu trong edge:
+Dữ liệu trong node: {'y': latitude, 'x': longitude, [một số thông tin khác]}
+Dữ liệu trong edge: (id node nguồn, id node đích, edge_data)
+  Ví dụ: (75617751, 317367071, {'osmid': 9965723, 'lanes': '2', 'name': 'Phố Tràng Tiền', 'highway': 'secondary', 'oneway': False, 'reversed': False, 'length': 128.35500000000002, 'geometry': <LINESTRING (105.853 21.025, 105.853 21.025, 105.854 21.025, 105.854 21.025)>})
+Trong fie mã nguồn, các thông tin của edge được sử dụng gồm có: id node nguồn, id node đích, giá trị của trường 'oneway', 'reversed', 'length'.
+Trường 'length' thể hiện độ dài đường.
+Trường 'oneway' cho biết đó có phải đường một chiều hay không. Nếu nó có giá trị True thì đây là đường một chiều, nếu có giá trị False thì đây là đường hai chiều.
+Trường 'reversed' cho biết đường này có bị đảo ngược so với thực tế hay không. Nếu nó có giá trị True thì đoạn đường này đã bị đảo ngược, nếu có giá trị False thì đoạn đường này đúng với thực tế.
+Khi 'oneway': False thì đó là đường hai chiều nên không cần xét giá trị trường 'reversed'.
+Khi 'oneway': True thì đó là đường một chiều và cần xét đến chiều của đoạn đường đó dựa vào trường 'reversed'
+  Ví dụ: một đoạn đường có:
+                id node nguồn: 11 -> node A
+                id node đích: 22  -> node B
+                'oneway': True
+        Nếu 'reversed': True thì đoạn đường đó trong thực tế có chiều từ B đến A.
+        Nếu 'reversed': False thì đoạn đường đó trong thực tế có chiều từ A đến B.
+Vì thế khi duyệt đồ thị với điểm xuất phát từ đỉnh A, nếu edge có 'oneway': True và 'reversed': True, cạnh này sẽ bị bỏ qua do trong thực tế, đây là đường một chiều từ B đến A. Khi đó cần phải xét đến một dict mới với node nguồn và node đích được đảo lại đúng với thứ tự thực tế.
